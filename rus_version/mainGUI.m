@@ -365,7 +365,7 @@ function pushbutton10_Callback(hObject, eventdata, handles)
  lengthOfextractArr = length(handles.g0); %lenght of extract components array
  
   if(handles.listcont==0)
-      msgbox('Не обработан ни один импульс. Нажмите, пожалуйста, кнопку "Найти импульсы"','Error','error');
+      msgbox('Не обработан ни один импульс. Нажмите, пожалуйста, кнопку <<Найти импульсы>>','Error','error');
   elseif(handles.listcont>lengthOfextractArr || isempty(handles.g0{handles.listcont}) || isempty(handles.fc{handles.listcont})...
           || isempty(handles.pos{handles.listcont}) )
       msgbox('Импульс не разбит на компоненты. Нажмите, пожалуйста, кнопку "Извлечь"','Error','error');
