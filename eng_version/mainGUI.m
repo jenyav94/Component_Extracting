@@ -22,7 +22,7 @@ function varargout = mainGUI(varargin)
 
 % Edit the above text to modify the response to help mainGUI
 
-% Last Modified by GUIDE v2.5 18-Jul-2014 07:52:49
+% Last Modified by GUIDE v2.5 03-Nov-2014 16:37:48
 
 % Begin initialization code - DO NOT EDIT
 
@@ -86,6 +86,7 @@ handles.ind_beg=[];
 handles.Fs=3000000;
 handles.max_imp=NaN;
 handles.min_imp=NaN;
+handles.PathName = '';
 
 set(handles.pushbutton4,'Enable','off');
 set(handles.pushbutton7,'Enable','off');
@@ -517,28 +518,29 @@ function pushbutton5_Callback(hObject, eventdata, handles)
   handles=guidata(hObject);
   freq=[];
   temp=[];
-   temp(1)=str2double(get(handles.edit1,'String'));
-   temp(2)=str2double(get(handles.edit2,'String'));
-   temp(3)=str2double(get(handles.edit3,'String'));
-  for i=1:3
-      if(~isnan(temp(i)))
-          freq(end+1)=temp(i);
-      end
-  end
+  
+  temp = cellstr(get(handles.edit11,'String'));
+  temp = strrep(temp,' ','');
+  freq = str2double(temp)';
+%   for i=1:3
+%       if(~isnan(temp{i}))
+%           freq(end+1)=str2double(temp{i});
+%       end
+%   end
   handles.freq=freq;
-   if(isempty(freq))
+   if(prod(isnan(freq)))
        msgbox('Введите, пожалуйста, границы компонент.','Error','error');
    end
    if(handles.listcont==0)
        msgbox('Не выбран импульс.','Error','error');
    
-   elseif(isnan(handles.leftbord(handles.listcont)) || isnan(handles.rightbord(handles.listcont)) )
+   elseif(prod(isnan(handles.leftbord(handles.listcont))) || prod(isnan(handles.rightbord(handles.listcont))) )
        msgbox('Введите, пожалуйста границы.','Error','error');
    end
     
-   
-  if(handles.listcont~=0 && ~isempty(freq) && ~isnan(handles.leftbord(handles.listcont))...
-     && ~isnan(handles.rightbord(handles.listcont))&& ~isempty(handles.imp) && ~isempty(handles.imphil) )
+    
+  if(handles.listcont~=0 && prod(~isnan(freq)) && prod(~isnan(handles.leftbord(handles.listcont)))...
+     && prod(~isnan(handles.rightbord(handles.listcont))) && ~isempty(handles.imp) && ~isempty(handles.imphil) )
      [handles.g0{handles.listcont}, handles.fc{handles.listcont}, handles.pos{handles.listcont}]=...
          extractComp(handles.imp(:,handles.listcont),handles.imphil(:,handles.listcont),...
           handles.leftbord(handles.listcont),handles.rightbord(handles.listcont),freq);
@@ -553,23 +555,20 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     flag=true;
    freq=[];
    temp=[];
-   temp(1)=str2double(get(handles.edit1,'String'));
-   temp(2)=str2double(get(handles.edit2,'String'));
-   temp(3)=str2double(get(handles.edit3,'String'));
-  for i=1:3
-      if(~isnan(temp(i)))
-          freq(end+1)=temp(i);
-      end
-  end
+   
+  temp = cellstr(get(handles.edit11,'String'));
+  temp = strrep(temp,' ','');
+  freq = str2double(temp)';
+  
   handles.freq=freq;
-   if(isempty(freq))
+   if(prod(isnan(freq)))
        msgbox('Введите, пожалуйста, границы компонент.','Error','error');
        flag=false;
    end
    
-    if(~isnan(handles.listsize))
+    if(prod(~isnan(handles.listsize)))
      for i=1:handles.listsize
-         if(isnan(handles.leftbord(i)) || isnan(handles.rightbord(i)))
+         if(prod(isnan(handles.leftbord(i))) || prod(isnan(handles.rightbord(i))))
               msgbox('Не все данные введены.','Error','error');
               flag=false;
               break;
@@ -634,74 +633,6 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     end
     
      guidata(hObject,handles);
-
-% freq border 1
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
-
-
-% freq border 1
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% freq border 2
-function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
-
-
-%  freq border 2
-function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% freq border 3
-function edit3_Callback(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
-
-
-% freq border 3
-function edit3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 % --------------------------------------------------------------------
@@ -779,10 +710,20 @@ function axes2_ButtonDownFcn(hObject, eventdata, handles)
 
 % --------------------------------------------------------------------
 function Open_file_Callback(hObject, eventdata, handles)
-   
     
     handles=guidata(gcf);
-   [FileName,PathName]=uigetfile('*.wav');
+    
+    PathName = handles.PathName;
+    
+    if isempty(PathName)
+        [FileName,PathName]=uigetfile('*.wav');
+    else
+        [FileName,PathName]=uigetfile([PathName, '*.wav']);
+    end
+    
+    handles.PathName = PathName;
+    guidata(hObject, handles);
+    
    if(FileName~=0)
         Clear_All(hObject);
         
@@ -1052,9 +993,9 @@ handles.min_imp=NaN;
 
  set(handles.listbox2,'String',{});
  set(handles.listbox4,'String',{});
- set(handles.edit1,'String','');
- set(handles.edit2,'String','');
- set(handles.edit3,'String','');
+ set(handles.edit11,'String','');
+% set(handles.edit2,'String','');
+% set(handles.edit3,'String','');
  set(handles.edit7,'String','');
  set(handles.edit8,'String','');
  set(handles.edit9,'String','');
@@ -1065,3 +1006,72 @@ handles.min_imp=NaN;
  
  guidata(hObject,handles);
         
+
+
+
+function edit10_Callback(hObject, eventdata, handles)
+% hObject    handle to edit10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit10 as text
+%        str2double(get(hObject,'String')) returns contents of edit10 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit10_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox5.
+function listbox5_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox5 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox5
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit11_Callback(hObject, eventdata, handles)
+% hObject    handle to edit11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit11 as text
+%        str2double(get(hObject,'String')) returns contents of edit11 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit11_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
