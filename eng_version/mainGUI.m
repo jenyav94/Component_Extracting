@@ -576,25 +576,25 @@ function pushbutton6_Callback(hObject, eventdata, handles)
      end
     end
     
-    handles.exall=2;
-    valcheckbox=get(handles.checkbox1,'Value');
+    handles.exall = 2;
+    valcheckbox = get(handles.checkbox1, 'Value');
     
-    if(valcheckbox==1 && flag==true && ~isempty(handles.imp) && ~isempty(handles.imphil))
+    if(valcheckbox == 1 && flag == true && ~isempty(handles.imp) && ~isempty(handles.imphil))
         for i=1:handles.listsize
             [handles.g0{i}, handles.fc{i}, handles.pos{i}]=...
-            extractComp(handles.imp(:,i),handles.imphil(:,i),handles.leftbord(i),...
-            handles.rightbord(i),handles.freq);
+            extractComp(handles.imp(:,i), handles.imphil(:,i), handles.leftbord(i),...
+            handles.rightbord(i), handles.freq);
      
      
-            L=handles.rightbord(i)-handles.leftbord(i)+1;
-            g0re=real(handles.g0{i});
-            handles.power(1:size(handles.g0{i},2),i) = sqrt(sum(g0re.^2)/L)';
-            handles.freq_center(1:size(handles.g0{i},2), i) = handles.fc{i};
+            L = handles.rightbord(i) - handles.leftbord(i) + 1;
+            g0re = real(handles.g0{i});
+            handles.power(1:size(handles.g0{i}, 2), i) = sqrt(sum(g0re.^2)/L)';
+            handles.freq_center(1:size(handles.g0{i}, 2), i) = handles.fc{i};
        
-            guidata(hObject,handles);
+            guidata(hObject, handles);
         end
         
-         handles.exall=0;
+         handles.exall = 0;
       
       ind_good = [1:size(handles.imp,2)];
       
